@@ -1,4 +1,3 @@
-// ÎÄ¼şÃû: HidSmbusService.cs
 using HidSharp;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ namespace PMBusHidTool
 {
     public class HidSmbusService
     {
-        // !!! ÓÃ»§±ØĞëĞŞ¸ÄµÄ²¿·Ö !!!
+        // !!! ç”¨æˆ·å¿…é¡»ä¿®æ”¹çš„éƒ¨åˆ† !!!
         private const int VENDOR_ID = 0x04D8;
         private const int PRODUCT_ID = 0xEB42;
         private HidDevice _device;
@@ -89,8 +88,8 @@ namespace PMBusHidTool
             {
                 if (!PerformWrite(deviceAddress, new[] { commandCode })) return null;
                 System.Threading.Thread.Sleep(20);
-                // ¼ÙÉèHIDÉè±¸´¦Àí¿é¶ÁÈ¡Ğ­Òé£¬·µ»Ø[³¤¶È, Êı¾İ...]
-                return PerformRead(deviceAddress, 32 + 1); // ¶ÁÈ¡×î¶à32×Ö½ÚÊı¾İ + 1×Ö½Ú³¤¶È
+                // å‡è®¾HIDè®¾å¤‡å¤„ç†å—è¯»å–åè®®ï¼Œè¿”å›[é•¿åº¦, æ•°æ®...]
+                return PerformRead(deviceAddress, 32 + 1); // è¯»å–æœ€å¤š32å­—èŠ‚æ•°æ® + 1å­—èŠ‚é•¿åº¦
             }
         }
 
@@ -99,9 +98,9 @@ namespace PMBusHidTool
             if (!IsConnected() || bytesToRead > 60) return null;
 
             var outputReport = new byte[_device.GetMaxOutputReportLength()];
-            outputReport[0] = 0x00; // ±¨¸æID
+            outputReport[0] = 0x00; // æŠ¥å‘ŠID
             outputReport[1] = 0x52; // 'R' for Read
-            outputReport[2] = (byte)(deviceAddress << 1 | 0x01); // µØÖ· + ¶Á±êÖ¾
+            outputReport[2] = (byte)(deviceAddress << 1 | 0x01); // åœ°å€ + è¯»æ ‡å¿—
             outputReport[3] = (byte)bytesToRead;
 
             try
@@ -109,8 +108,8 @@ namespace PMBusHidTool
                 _stream.Write(outputReport);
                 var inputReport = _stream.Read();
                 
-                // Ô¤ÆÚ¸ñÊ½: [×´Ì¬, ³¤¶È, Êı¾İ...]
-                if (inputReport.Length > 2 && inputReport[0] == 0x01) // 0x01 = ³É¹¦
+                // é¢„æœŸæ ¼å¼: [çŠ¶æ€, é•¿åº¦, æ•°æ®...]
+                if (inputReport.Length > 2 && inputReport[0] == 0x01) // 0x01 = æˆåŠŸ
                 {
                     int readLen = inputReport[1];
                     if(readLen > inputReport.Length - 2) readLen = inputReport.Length - 2;
@@ -126,9 +125,9 @@ namespace PMBusHidTool
             if (!IsConnected() || data.Length > 60) return false;
 
             var outputReport = new byte[_device.GetMaxOutputReportLength()];
-            outputReport[0] = 0x00; // ±¨¸æID
+            outputReport[0] = 0x00; // æŠ¥å‘ŠID
             outputReport[1] = 0x57; // 'W' for Write
-            outputReport[2] = (byte)(deviceAddress << 1); // µØÖ· + Ğ´±êÖ¾
+            outputReport[2] = (byte)(deviceAddress << 1); // åœ°å€ + å†™æ ‡å¿—
             outputReport[3] = (byte)data.Length;
             if (data.Length > 0) Array.Copy(data, 0, outputReport, 4, data.Length);
 
@@ -136,7 +135,7 @@ namespace PMBusHidTool
             {
                 _stream.Write(outputReport);
                 var inputReport = _stream.Read();
-                return inputReport.Length > 0 && inputReport[0] == 0x01; // 0x01 = ³É¹¦
+                return inputReport.Length > 0 && inputReport[0] == 0x01; // 0x01 = æˆåŠŸ
             }
             catch (TimeoutException) { /* Ignore */ }
             return false;
