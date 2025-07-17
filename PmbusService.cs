@@ -1,4 +1,3 @@
-// ÎÄ¼şÃû: PmbusService.cs
 using System;
 using System.Text;
 
@@ -133,7 +132,7 @@ namespace PMBusHidTool
         {
             var data = _smbus.BlockRead(deviceAddress, commandCode);
             if (data == null || data.Length < 1) return null;
-            // µÚÒ»¸ö×Ö½ÚÊÇ³¤¶È
+            // ç¬¬ä¸€ä¸ªå­—èŠ‚æ˜¯é•¿åº¦
             int length = data[0];
             if (length > data.Length - 1) length = data.Length - 1;
             return Encoding.ASCII.GetString(data, 1, length);
@@ -173,16 +172,16 @@ namespace PMBusHidTool
 
         private bool WriteLinear11(byte deviceAddress, byte commandCode, double value)
         {
-            // Îª¼ò»¯Æğ¼û£¬´ËÊ¾Àı¼Ù¶¨Ê¹ÓÃ¹Ì¶¨Ö¸Êı£¬ÕâÔÚÏŞÖÆÉèÖÃÖĞºÜ³£¼û¡£
-            // Ò»¸ö¸ü½¡×³µÄÊµÏÖ»á¶ÁÈ¡Éè±¸Ö§³ÖµÄ¸ñÊ½¡£
-            const int exponent = -2; // Ê¾Àı£ºIOUTµÄÖ¸ÊıÍ¨³£Îª-2
+            // ä¸ºç®€åŒ–èµ·è§ï¼Œæ­¤ç¤ºä¾‹å‡å®šä½¿ç”¨å›ºå®šæŒ‡æ•°ï¼Œè¿™åœ¨é™åˆ¶è®¾ç½®ä¸­å¾ˆå¸¸è§ã€‚
+            // ä¸€ä¸ªæ›´å¥å£®çš„å®ç°ä¼šè¯»å–è®¾å¤‡æ”¯æŒçš„æ ¼å¼ã€‚
+            const int exponent = -2; // ç¤ºä¾‹ï¼šIOUTçš„æŒ‡æ•°é€šå¸¸ä¸º-2
             short mantissa = (short)Math.Round(value / Math.Pow(2, exponent));
 
-            // ´ò°ü³ÉLinear11¸ñÊ½£¨Îª¼ò½àÆğ¼û£¬´Ë´¦Î´ÍêÈ«ÊµÏÖ£¬¼Ù¶¨Ö±½ÓĞ´ÈëÎ²Êı£©
-            // ÍêÕûµÄÊµÏÖĞèÒª´ò°üÎ²ÊıºÍÖ¸Êı¡£
-            // ¶ÔÓÚĞí¶àÉè±¸£¬ÉèÖÃÏŞÖÆÉæ¼°ÒÔÔ¤¶¨Òå¸ñÊ½Ğ´ÈëÒ»¸ö¼òµ¥µÄ×Ö¡£
-            // ÎÒÃÇ¼ÙÉèÉè±¸½ÓÊÜ¸ø¶¨ÃüÁîµÄ¼òµ¥Î²Êı¡£
-            ushort rawValue = (ushort)mantissa; // ÕâÊÇÒ»¸ö¼ò»¯´¦Àí¡£
+            // æ‰“åŒ…æˆLinear11æ ¼å¼ï¼ˆä¸ºç®€æ´èµ·è§ï¼Œæ­¤å¤„æœªå®Œå…¨å®ç°ï¼Œå‡å®šç›´æ¥å†™å…¥å°¾æ•°ï¼‰
+            // å®Œæ•´çš„å®ç°éœ€è¦æ‰“åŒ…å°¾æ•°å’ŒæŒ‡æ•°ã€‚
+            // å¯¹äºè®¸å¤šè®¾å¤‡ï¼Œè®¾ç½®é™åˆ¶æ¶‰åŠä»¥é¢„å®šä¹‰æ ¼å¼å†™å…¥ä¸€ä¸ªç®€å•çš„å­—ã€‚
+            // æˆ‘ä»¬å‡è®¾è®¾å¤‡æ¥å—ç»™å®šå‘½ä»¤çš„ç®€å•å°¾æ•°ã€‚
+            ushort rawValue = (ushort)mantissa; // è¿™æ˜¯ä¸€ä¸ªç®€åŒ–å¤„ç†ã€‚
             
             return _smbus.WriteWord(deviceAddress, commandCode, rawValue);
         }
