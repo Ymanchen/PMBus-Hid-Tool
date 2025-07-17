@@ -1,4 +1,3 @@
-// ÎÄ¼şÃû: MainWindow.xaml.cs
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,7 +37,7 @@ namespace PMBusHidTool
             _autoRefreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             _autoRefreshTimer.Tick += async (s, e) => await RefreshMonitoringData();
 
-            Log("»¶Ó­Ê¹ÓÃ PMBus HID ÉÏÎ»»ú v3.0¡£ÇëÁ¬½ÓÓ²¼ş²¢É¨ÃèÉè±¸¡£");
+            Log("æ¬¢è¿ä½¿ç”¨ PMBus HID ä¸Šä½æœº v3.0ã€‚è¯·è¿æ¥ç¡¬ä»¶å¹¶æ‰«æè®¾å¤‡ã€‚");
         }
         
         private void Log(string message)
@@ -52,7 +51,7 @@ namespace PMBusHidTool
 
         private async void ScanButton_Click(object sender, RoutedEventArgs e)
         {
-            Log("¿ªÊ¼É¨ÃèÉè±¸...");
+            Log("å¼€å§‹æ‰«æè®¾å¤‡...");
             SetUiEnabled(false);
             AddressComboBox.Items.Clear();
 
@@ -64,12 +63,12 @@ namespace PMBusHidTool
 
             if (!_hidService.IsConnected())
             {
-                Log("´íÎó: Î´ÕÒµ½Ö¸¶¨µÄHIDÉè±¸¡£Çë¼ì²éVID/PIDºÍÉè±¸Á¬½Ó¡£");
-                MessageBox.Show("Î´ÕÒµ½Ö¸¶¨µÄHIDÉè±¸¡£\nÇë¼ì²éÓ²¼şÁ¬½Ó£¬²¢È·ÈÏHidSmbusService.csÖĞµÄVID/PIDÊÇ·ñÕıÈ·¡£", "Á¬½Ó´íÎó", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log("é”™è¯¯: æœªæ‰¾åˆ°æŒ‡å®šçš„HIDè®¾å¤‡ã€‚è¯·æ£€æŸ¥VID/PIDå’Œè®¾å¤‡è¿æ¥ã€‚");
+                MessageBox.Show("æœªæ‰¾åˆ°æŒ‡å®šçš„HIDè®¾å¤‡ã€‚\nè¯·æ£€æŸ¥ç¡¬ä»¶è¿æ¥ï¼Œå¹¶ç¡®è®¤HidSmbusService.csä¸­çš„VID/PIDæ˜¯å¦æ­£ç¡®ã€‚", "è¿æ¥é”™è¯¯", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else if (_foundAddresses.Any())
             {
-                Log($"É¨ÃèÍê³É£¡·¢ÏÖ {_foundAddresses.Count} ¸öÉè±¸: {string.Join(", ", _foundAddresses.Select(a => $"0x{a:X2}"))}");
+                Log($"æ‰«æå®Œæˆï¼å‘ç° {_foundAddresses.Count} ä¸ªè®¾å¤‡: {string.Join(", ", _foundAddresses.Select(a => $"0x{a:X2}"))}");
                 foreach (var addr in _foundAddresses)
                 {
                     AddressComboBox.Items.Add($"0x{addr:X2}");
@@ -78,7 +77,7 @@ namespace PMBusHidTool
             }
             else
             {
-                Log("É¨ÃèÍê³É£¬µ«Î´ÔÚI2C×ÜÏßÉÏ·¢ÏÖÈÎºÎÏìÓ¦Éè±¸¡£");
+                Log("æ‰«æå®Œæˆï¼Œä½†æœªåœ¨I2Cæ€»çº¿ä¸Šå‘ç°ä»»ä½•å“åº”è®¾å¤‡ã€‚");
             }
             ScanButton.IsEnabled = true;
         }
@@ -110,15 +109,15 @@ namespace PMBusHidTool
         {
             if (AddressComboBox.SelectedIndex == -1) return;
             byte selectedAddress = _foundAddresses[AddressComboBox.SelectedIndex];
-            Log($"ÕıÔÚ´ÓµØÖ· 0x{selectedAddress:X2} Ë¢ĞÂ¼à¿ØÊı¾İ...");
+            Log($"æ­£åœ¨ä»åœ°å€ 0x{selectedAddress:X2} åˆ·æ–°ç›‘æ§æ•°æ®...");
 
             var results = await Task.Run(() => _pmbusService.ReadAllMonitoredParameters(selectedAddress));
 
-            UpdateParameter("Êä³öµçÑ¹", "V", results.Vout);
-            UpdateParameter("Êä³öµçÁ÷", "A", results.Iout);
-            UpdateParameter("ÊäÈëµçÑ¹", "V", results.Vin);
-            UpdateParameter("ÎÂ¶È", "¡ãC", results.Temperature);
-            UpdateParameter("×´Ì¬×Ö", "", results.StatusWord);
+            UpdateParameter("è¾“å‡ºç”µå‹", "V", results.Vout);
+            UpdateParameter("è¾“å‡ºç”µæµ", "A", results.Iout);
+            UpdateParameter("è¾“å…¥ç”µå‹", "V", results.Vin);
+            UpdateParameter("æ¸©åº¦", "Â°C", results.Temperature);
+            UpdateParameter("çŠ¶æ€å­—", "", results.StatusWord);
 
             if (results.StatusWord.HasValue)
             {
@@ -126,33 +125,33 @@ namespace PMBusHidTool
             }
             else
             {
-                StatusDecodeTextBox.Text = "¶ÁÈ¡×´Ì¬×ÖÊ§°Ü¡£";
+                StatusDecodeTextBox.Text = "è¯»å–çŠ¶æ€å­—å¤±è´¥ã€‚";
             }
-            Log("¼à¿ØÊı¾İÒÑ¸üĞÂ¡£");
+            Log("ç›‘æ§æ•°æ®å·²æ›´æ–°ã€‚");
         }
 
         private async Task RefreshDeviceInfo()
         {
             if (AddressComboBox.SelectedIndex == -1) return;
             byte selectedAddress = _foundAddresses[AddressComboBox.SelectedIndex];
-            Log($"ÕıÔÚ¶ÁÈ¡Éè±¸ĞÅÏ¢ 0x{selectedAddress:X2}...");
+            Log($"æ­£åœ¨è¯»å–è®¾å¤‡ä¿¡æ¯ 0x{selectedAddress:X2}...");
 
             DeviceInfos.Clear();
             var info = await Task.Run(() => _pmbusService.ReadDeviceInformation(selectedAddress));
             
-            DeviceInfos.Add(new KeyValuePair<string, string>("ÖÆÔìÉÌ (MFR_ID)", info.MfrId ?? "N/A"));
-            DeviceInfos.Add(new KeyValuePair<string, string>("ĞÍºÅ (MFR_MODEL)", info.MfrModel ?? "N/A"));
-            DeviceInfos.Add(new KeyValuePair<string, string>("Ó²¼ş°æ±¾ (MFR_REVISION)", info.MfrRevision ?? "N/A"));
-            DeviceInfos.Add(new KeyValuePair<string, string>("ĞòÁĞºÅ (MFR_SERIAL)", info.MfrSerial ?? "N/A"));
-            DeviceInfos.Add(new KeyValuePair<string, string>("PMBus °æ±¾ (PMBUS_REVISION)", info.PmbusRevision ?? "N/A"));
-            Log("Éè±¸ĞÅÏ¢ÒÑ¸üĞÂ¡£");
+            DeviceInfos.Add(new KeyValuePair<string, string>("åˆ¶é€ å•† (MFR_ID)", info.MfrId ?? "N/A"));
+            DeviceInfos.Add(new KeyValuePair<string, string>("å‹å· (MFR_MODEL)", info.MfrModel ?? "N/A"));
+            DeviceInfos.Add(new KeyValuePair<string, string>("ç¡¬ä»¶ç‰ˆæœ¬ (MFR_REVISION)", info.MfrRevision ?? "N/A"));
+            DeviceInfos.Add(new KeyValuePair<string, string>("åºåˆ—å· (MFR_SERIAL)", info.MfrSerial ?? "N/A"));
+            DeviceInfos.Add(new KeyValuePair<string, string>("PMBus ç‰ˆæœ¬ (PMBUS_REVISION)", info.PmbusRevision ?? "N/A"));
+            Log("è®¾å¤‡ä¿¡æ¯å·²æ›´æ–°ã€‚");
         }
         
         private async Task RefreshConfigurationData()
         {
             if (AddressComboBox.SelectedIndex == -1) return;
             byte selectedAddress = _foundAddresses[AddressComboBox.SelectedIndex];
-            Log($"ÕıÔÚ¶ÁÈ¡ÅäÖÃÏŞÖÆ 0x{selectedAddress:X2}...");
+            Log($"æ­£åœ¨è¯»å–é…ç½®é™åˆ¶ 0x{selectedAddress:X2}...");
 
             var voutOvLimit = await Task.Run(() => _pmbusService.ReadVoutOvFaultLimit(selectedAddress));
             VoutOvFaultLimitTextBox.Text = voutOvLimit?.ToString("F2") ?? "N/A";
@@ -163,7 +162,7 @@ namespace PMBusHidTool
             var otLimit = await Task.Run(() => _pmbusService.ReadOtFaultLimit(selectedAddress));
             OtFaultLimitTextBox.Text = otLimit?.ToString("F2") ?? "N/A";
             
-            Log("ÅäÖÃÏŞÖÆÒÑ¸üĞÂ¡£");
+            Log("é…ç½®é™åˆ¶å·²æ›´æ–°ã€‚");
         }
 
         private void UpdateParameter(string name, string unit, PmbusReadResult? result)
@@ -182,7 +181,7 @@ namespace PMBusHidTool
             }
             else
             {
-                param.Value = "¶ÁÈ¡Ê§°Ü";
+                param.Value = "è¯»å–å¤±è´¥";
                 param.RawValue = "N/A";
             }
         }
@@ -191,9 +190,9 @@ namespace PMBusHidTool
         {
             if (AddressComboBox.SelectedIndex == -1) return;
             byte selectedAddress = _foundAddresses[AddressComboBox.SelectedIndex];
-            Log($"·¢ËÍ CLEAR_FAULTS µ½µØÖ· 0x{selectedAddress:X2}...");
+            Log($"å‘é€ CLEAR_FAULTS åˆ°åœ°å€ 0x{selectedAddress:X2}...");
             bool success = await Task.Run(() => _pmbusService.ClearFaults(selectedAddress));
-            Log(success ? "Çå³ı¹ÊÕÏÃüÁî·¢ËÍ³É¹¦¡£" : "Çå³ı¹ÊÕÏÃüÁî·¢ËÍÊ§°Ü¡£");
+            Log(success ? "æ¸…é™¤æ•…éšœå‘½ä»¤å‘é€æˆåŠŸã€‚" : "æ¸…é™¤æ•…éšœå‘½ä»¤å‘é€å¤±è´¥ã€‚");
             if(success) await RefreshMonitoringData();
         }
 
@@ -201,18 +200,18 @@ namespace PMBusHidTool
         {
             if (AddressComboBox.SelectedIndex == -1) return;
             byte selectedAddress = _foundAddresses[AddressComboBox.SelectedIndex];
-            Log($"·¢ËÍ ON ÃüÁîµ½µØÖ· 0x{selectedAddress:X2}...");
+            Log($"å‘é€ ON å‘½ä»¤åˆ°åœ°å€ 0x{selectedAddress:X2}...");
             bool success = await Task.Run(() => _pmbusService.SetOperation(selectedAddress, PmbusOperation.On));
-            Log(success ? "¿ªÆôÃüÁî·¢ËÍ³É¹¦¡£" : "¿ªÆôÃüÁî·¢ËÍÊ§°Ü¡£");
+            Log(success ? "å¼€å¯å‘½ä»¤å‘é€æˆåŠŸã€‚" : "å¼€å¯å‘½ä»¤å‘é€å¤±è´¥ã€‚");
         }
 
         private async void TurnOffButton_Click(object sender, RoutedEventArgs e)
         {
             if (AddressComboBox.SelectedIndex == -1) return;
             byte selectedAddress = _foundAddresses[AddressComboBox.SelectedIndex];
-            Log($"·¢ËÍ OFF ÃüÁîµ½µØÖ· 0x{selectedAddress:X2}...");
+            Log($"å‘é€ OFF å‘½ä»¤åˆ°åœ°å€ 0x{selectedAddress:X2}...");
             bool success = await Task.Run(() => _pmbusService.SetOperation(selectedAddress, PmbusOperation.Off));
-            Log(success ? "¹Ø¶ÏÃüÁî·¢ËÍ³É¹¦¡£" : "¹Ø¶ÏÃüÁî·¢ËÍÊ§°Ü¡£");
+            Log(success ? "å…³æ–­å‘½ä»¤å‘é€æˆåŠŸã€‚" : "å…³æ–­å‘½ä»¤å‘é€å¤±è´¥ã€‚");
         }
 
         private async void SetLimitButton_Click(object sender, RoutedEventArgs e)
@@ -230,26 +229,26 @@ namespace PMBusHidTool
                 case "VOUT_OV":
                     if (double.TryParse(VoutOvFaultLimitTextBox.Text, out double voutLimit))
                     {
-                        Log($"ÉèÖÃ VOUT_OV_FAULT_LIMIT Îª {voutLimit}V...");
+                        Log($"è®¾ç½® VOUT_OV_FAULT_LIMIT ä¸º {voutLimit}V...");
                         success = await Task.Run(() => _pmbusService.SetVoutOvFaultLimit(selectedAddress, voutLimit));
                     }
                     break;
                 case "IOUT_OC":
                     if (double.TryParse(IoutOcFaultLimitTextBox.Text, out double ioutLimit))
                     {
-                        Log($"ÉèÖÃ IOUT_OC_FAULT_LIMIT Îª {ioutLimit}A...");
+                        Log($"è®¾ç½® IOUT_OC_FAULT_LIMIT ä¸º {ioutLimit}A...");
                         success = await Task.Run(() => _pmbusService.SetIoutOcFaultLimit(selectedAddress, ioutLimit));
                     }
                     break;
                 case "OT":
                     if (double.TryParse(OtFaultLimitTextBox.Text, out double otLimit))
                     {
-                        Log($"ÉèÖÃ OT_FAULT_LIMIT Îª {otLimit}¡ãC...");
+                        Log($"è®¾ç½® OT_FAULT_LIMIT ä¸º {otLimit}Â°C...");
                         success = await Task.Run(() => _pmbusService.SetOtFaultLimit(selectedAddress, otLimit));
                     }
                     break;
             }
-            Log(success ? "ÉèÖÃ³É¹¦¡£" : "ÉèÖÃÊ§°Ü»òÊäÈëÎŞĞ§¡£");
+            Log(success ? "è®¾ç½®æˆåŠŸã€‚" : "è®¾ç½®å¤±è´¥æˆ–è¾“å…¥æ— æ•ˆã€‚");
             if(success) await RefreshConfigurationData();
         }
 
@@ -260,21 +259,21 @@ namespace PMBusHidTool
 
             if (!byte.TryParse(ManualCommandCodeTextBox.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte commandCode))
             {
-                MessageBox.Show("ÃüÁî´úÂë±ØĞëÊÇÒ»¸öÓĞĞ§µÄ16½øÖÆÊı (ÀıÈç: 8B)¡£", "ÊäÈë´íÎó", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("å‘½ä»¤ä»£ç å¿…é¡»æ˜¯ä¸€ä¸ªæœ‰æ•ˆçš„16è¿›åˆ¶æ•° (ä¾‹å¦‚: 8B)ã€‚", "è¾“å…¥é”™è¯¯", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            Log($"ÊÖ¶¯¶ÁÈ¡: µØÖ·=0x{selectedAddress:X2}, ÃüÁî=0x{commandCode:X2}");
+            Log($"æ‰‹åŠ¨è¯»å–: åœ°å€=0x{selectedAddress:X2}, å‘½ä»¤=0x{commandCode:X2}");
             var result = await Task.Run(() => _pmbusService.ExecuteReadWord(selectedAddress, commandCode));
             if (result.HasValue)
             {
                 ManualReadResultTextBox.Text = $"0x{result.Value:X4}";
-                Log($"¶ÁÈ¡³É¹¦: ÊÕµ½ 0x{result.Value:X4}");
+                Log($"è¯»å–æˆåŠŸ: æ”¶åˆ° 0x{result.Value:X4}");
             }
             else
             {
-                ManualReadResultTextBox.Text = "¶ÁÈ¡Ê§°Ü";
-                Log("¶ÁÈ¡Ê§°Ü¡£");
+                ManualReadResultTextBox.Text = "è¯»å–å¤±è´¥";
+                Log("è¯»å–å¤±è´¥ã€‚");
             }
         }
 
@@ -285,19 +284,19 @@ namespace PMBusHidTool
 
             if (!byte.TryParse(ManualCommandCodeTextBox.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte commandCode))
             {
-                MessageBox.Show("ÃüÁî´úÂë±ØĞëÊÇÒ»¸öÓĞĞ§µÄ16½øÖÆÊı (ÀıÈç: 8B)¡£", "ÊäÈë´íÎó", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("å‘½ä»¤ä»£ç å¿…é¡»æ˜¯ä¸€ä¸ªæœ‰æ•ˆçš„16è¿›åˆ¶æ•° (ä¾‹å¦‚: 8B)ã€‚", "è¾“å…¥é”™è¯¯", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (!ushort.TryParse(ManualWriteValueTextBox.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort value))
             {
-                MessageBox.Show("Ğ´ÈëÊı¾İ±ØĞëÊÇÒ»¸öÓĞĞ§µÄ16½øÖÆÊı (0000-FFFF)¡£", "ÊäÈë´íÎó", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("å†™å…¥æ•°æ®å¿…é¡»æ˜¯ä¸€ä¸ªæœ‰æ•ˆçš„16è¿›åˆ¶æ•° (0000-FFFF)ã€‚", "è¾“å…¥é”™è¯¯", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            Log($"ÊÖ¶¯Ğ´Èë×Ö: µØÖ·=0x{selectedAddress:X2}, ÃüÁî=0x{commandCode:X2}, Öµ=0x{value:X4}");
+            Log($"æ‰‹åŠ¨å†™å…¥å­—: åœ°å€=0x{selectedAddress:X2}, å‘½ä»¤=0x{commandCode:X2}, å€¼=0x{value:X4}");
             bool success = await Task.Run(() => _pmbusService.ExecuteWriteWord(selectedAddress, commandCode, value));
-            Log(success ? "Ğ´Èë³É¹¦¡£" : "Ğ´ÈëÊ§°Ü¡£");
+            Log(success ? "å†™å…¥æˆåŠŸã€‚" : "å†™å…¥å¤±è´¥ã€‚");
         }
 
         private void SetUiEnabled(bool isEnabled)
@@ -345,7 +344,7 @@ namespace PMBusHidTool
     {
         public static string DecodeStatusWord(ushort status)
         {
-            if (status == 0) return "×´Ì¬Õı³£¡£No faults or warnings detected.";
+            if (status == 0) return "çŠ¶æ€æ­£å¸¸ã€‚No faults or warnings detected.";
             var sb = new StringBuilder();
             if ((status & 0x8000) != 0) sb.AppendLine("Bit 15: VOUT Fault");
             if ((status & 0x4000) != 0) sb.AppendLine("Bit 14: IOUT Fault or IOUT_OC_FAULT");
