@@ -1,4 +1,3 @@
-// ÎÄ¼şÃû: App.xaml.cs
 using System.Windows;
 
 namespace PMBusHidTool
